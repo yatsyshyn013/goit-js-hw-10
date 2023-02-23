@@ -8,7 +8,8 @@ const DEBOUNCE_DELAY = 300;
 
 const refs = {
     input: document.querySelector('#search-box'),
-    countryList: document.querySelector('.country-list')
+    // countryList: document.querySelector('.country-list'),
+    // countryInfo: document.querySelector('.country-info')
 };
 
 refs.input.addEventListener('input', debounce(onInputEvent, DEBOUNCE_DELAY));
@@ -16,12 +17,10 @@ refs.input.addEventListener('input', debounce(onInputEvent, DEBOUNCE_DELAY));
 
 function onInputEvent(evt) {
     fetchCountries(evt)
-        // .then(data => {
-        //     if (data.length > 10) {
-        //         warningNotification();
-        //     } 
-        // });
+        // .then(severalCountriesRequest);
 };
+
+
 
 
 

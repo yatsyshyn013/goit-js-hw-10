@@ -8,23 +8,29 @@ const refs = {
 
 export function fetchCountries(evt) {
     const name = evt.target.value.trim().toLowerCase();
+    
 
     if (name === '') {
+        clearInfoMarkup();
+        clearMarkup();
         return;
     }
 
 
     fetch(`https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`)
         .then(response => {
-            // if (!response.ok) {
-            // throw new Error(response.status);
-            // }
-            console.log(response);
+            if (!response.ok) {
+            throw new Error(response.status);
+            }
+
+            // console.log(response);
             return response.json();
         })
         .then(data => {
             // console.log(data);
             if (data.length > 10) {
+                clearMarkup();
+                clearInfoMarkup();
                 warningNotification();
             } else if (data.length >= 2 && data.length <= 10) {
                 severalCountriesRequest(data);
@@ -34,14 +40,11 @@ export function fetchCountries(evt) {
         })
         .catch(error => {
             console.log(error);
-        });
-    
-        
-      
-};
+            clearMarkup();
+            clearInfoMarkup();
+            noCountryNotification();
 
-function warningNotification() {
-    Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+        });
 };
 
 function severalCountriesRequest(data) {
@@ -54,31 +57,17 @@ function severalCountriesRequest(data) {
      refs.countryList.innerHTML = markup.join("");
 }
 
-function clearMarkup() {
-    refs.countryList.innerHTML = '';
-}
-
-function clearInfoMarkup() {
-    refs.countryInfo.innerHTML = '';
-}
-
 function oneCountryRequest(oneCountry) {
    
     clearInfoMarkup();
-    // const languagesArr = languages.map(language => language.name);
-    // const infoMarkup = `<ul class="info-list">
-    //     <li>Capital: ${oneCountry.capital}</li>
-    //     <li>Population: ${oneCountry.population}</li>
-    //     <li>Languages: ${languagesArr(oneCountry)}</li>
-    // </ul>`;
    
     refs.countryList.innerHTML = `<li class="list-item"><img src="${oneCountry.flags.svg}" alt="${oneCountry.flags}" width="30px"><span class="text-item">${oneCountry.name.common}</span></li>`;
 
     refs.countryInfo.insertAdjacentHTML('beforeend', 
     `<ul class="info-list">
-        <li>Capital: ${oneCountry.capital}</li>
-        <li>Population: ${oneCountry.population}</li>
-        <li>Languages: ${languagesArr(oneCountry)}</li>
+        <li><b>Capital:</b> ${oneCountry.capital}</li>
+        <li><b>Population:</b> ${oneCountry.population}</li>
+        <li><b>Languages:</b> ${languagesArr(oneCountry)}</li>
     </ul>`);
     
     // refs.countryList.innerHTML = markup.join("");
@@ -87,5 +76,23 @@ function oneCountryRequest(oneCountry) {
 function languagesArr(oneCountry) {
     return Object.values(oneCountry.languages).join(', ');
 }
+
+function noCountryNotification() {
+    Notiflix.Notify.failure("Oops, there is no country with that name");
+}
+
+function warningNotification() {
+    Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+};
+
+function clearMarkup() {
+    refs.countryList.innerHTML = '';
+}
+
+function clearInfoMarkup() {
+    refs.countryInfo.innerHTML = '';
+}
+
+
 
 
