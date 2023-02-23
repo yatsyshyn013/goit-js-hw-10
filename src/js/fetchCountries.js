@@ -70,7 +70,6 @@ function oneCountryRequest(oneCountry) {
         <li><b>Languages:</b> ${languagesArr(oneCountry)}</li>
     </ul>`);
     
-    // refs.countryList.innerHTML = markup.join("");
 }
 
 function languagesArr(oneCountry) {
@@ -92,6 +91,13 @@ function clearMarkup() {
 function clearInfoMarkup() {
     refs.countryInfo.innerHTML = '';
 }
+
+
+
+
+
+
+
 
 
 
